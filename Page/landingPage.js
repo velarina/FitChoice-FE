@@ -2,29 +2,17 @@ import react from "react";
 import {
   Text,
   View,
+  Image,
   StyleSheet,
   StatusBar,
   ImageBackground,
-  TextInput,
 } from "react-native";
-import React, { useState } from "react";
 
 import CustomButtonG from "../components/customButtonGreen";
+import CustomButtonW from "../components/customButtonBeige";
 import imageBG from "../assets/background.png";
-import CustomTextInput from "../components/customTextInput";
 
-const Login = ({ navigation }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleEmailChange = (newEmail) => {
-    setEmail(newEmail);
-  };
-
-  const handlePasswordChange = (newPassword) => {
-    setPassword(newPassword);
-  };
-
+const LandingPage = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <ImageBackground source={imageBG} resizeMode="cover" style={styles.image}>
@@ -38,31 +26,29 @@ const Login = ({ navigation }) => {
             paddingBottom: 10,
           }}
         >
-          Login
+          Are you new to Fitchoice?
         </Text>
-        <CustomTextInput
-          text={email}
-          onValueChange={handleEmailChange}
-          placeholder="Email"
+
+        <Image
+          source={require("../assets/landingPageImage.png")}
+          style={styles.landingPageImage}
         />
-        <CustomTextInput
-          text={password}
-          onValueChange={handlePasswordChange}
-          placeholder="Password"
-          secureTextEntry={true}
-        />
+
         <View style={{ paddingTop: 50 }}>
           <CustomButtonG
-            onPress={() => navigation.navigate("home")}
-            text="login"
+            onPress={() => navigation.navigate("register")}
+            text="yes I'm new!"
+          />
+          <CustomButtonW
+            onPress={() => navigation.navigate("login")}
+            text="I have an account"
           />
         </View>
       </ImageBackground>
     </View>
   );
 };
-
-export default Login;
+export default LandingPage;
 
 const styles = StyleSheet.create({
   container: {

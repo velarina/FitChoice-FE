@@ -1,33 +1,37 @@
-import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
+import { StyleSheet, SafeAreaView, Image, StatusBar } from "react-native";
 
-export default function App() {
+const SplashScreen = ({ navigation }) => {
   useEffect(() => {
-    async function prepare() {
-      await SplashScreen.preventAutoHideAsync();
-
-      // Simulate fetching data
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // Hide the splash screen
-      await SplashScreen.hideAsync();
-    }
-
-    prepare();
-  }, []);
+    const timer = setTimeout(() => {
+      navigation.navigate("landingPage");
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, [navigation]);
 
   return (
-    <Image
-      source={require("../assets/FitChoiceLogo.png")}
-      style={styles.logo}
-    ></Image>
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="auto" />
+      <Image
+        source={require("../assets/FitChoiceLogo.png")}
+        style={styles.image}
+      />
+    </SafeAreaView>
   );
-}
+};
+
+export default SplashScreen;
 
 const styles = StyleSheet.create({
-  logo: {
+  container: {
     flex: 1,
+    backgroundColor: "#FFFFFF",
     alignItems: "center",
     justifyContent: "center",
+  },
+  image: {
+    height: 280,
+    width: 200,
+    alignSelf: "center",
   },
 });
