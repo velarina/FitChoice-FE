@@ -6,30 +6,49 @@ import {
   FlatList,
   StyleSheet,
   ImageBackground,
+  navigateToScreen,
 } from "react-native";
 import SearchBar from "../components/searchBar";
+import ProductCard from "../components/productCard";
+// import TabController from "../components/tabController";
+import productDetail from "./productDetail";
+import { TabActions } from "@react-navigation/native";
 
-const HomePage = () => {
+const HomePage = ({ navigation }) => {
   const initialProducts = [
     {
       id: 1,
       name: "Almond Milk",
+      approval: "Low",
       brand: "NutriAlmond",
       image: require("../assets/milk.png"),
+    },
+    {
+      id: 2,
+      name: "Citato",
+      approval: "Medium",
+      brand: "gofood",
+      image: require("../assets/chips.png"),
+    },
+    {
+      id: 3,
+      name: "soda",
+      approval: "High",
+      brand: "cocacola",
+      image: require("../assets/soda.png"),
     },
   ];
 
   const [products, setProducts] = useState(initialProducts);
-  const [filteredProducts, setFilteredProducts] = useState(initialProducts);
 
   const handleSearch = (searchText) => {
     if (searchText.trim() === "") {
-      setFilteredProducts(initialProducts); // Reset to initial products if search is empty
+      setProducts(initialProducts); // Reset to initial products if search is empty
     } else {
       const filtered = initialProducts.filter((product) =>
         product.name.toLowerCase().includes(searchText.toLowerCase())
       );
-      setFilteredProducts(filtered);
+      setProducts(filtered);
     }
   };
 
@@ -43,18 +62,20 @@ const HomePage = () => {
         source={require("../assets/background2.png")}
         style={styles.backgroundImage}
       >
-        {filteredProducts.length === 0 ? (
+        {products.length === 0 ? (
           <Text style={styles.noProductsText}>No products found</Text>
         ) : (
           <FlatList
-            data={filteredProducts}
+            data={products}
             numColumns={3}
             renderItem={({ item }) => (
-              <View style={styles.productCard}>
-                <Image source={item.image} style={styles.productImage} />
-                <Text style={styles.productName}>{item.name}</Text>
-                <Text style={styles.productBrand}>{item.brand}</Text>
-              </View>
+              <ProductCard
+                source={item.image}
+                approval={item.approval}
+                name={item.name}
+                brand={item.brand}
+                onPress={() => navigation.navigate("productDetail")}
+              />
             )}
             keyExtractor={(item) => item.id.toString()} // Ensure the key is a string
             style={styles.productContainer}
@@ -95,26 +116,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 18,
     marginTop: 20,
-    color: "gray",
-  },
-  productCard: {
-    width: 116,
-    alignItems: "center",
-    padding: 10,
-    backgroundColor: "#F2F2F2",
-    borderRadius: 10,
-    margin: 5,
-  },
-  productImage: {
-    width: 100,
-    height: 100,
-  },
-  productName: {
-    fontWeight: "bold",
-    marginTop: 5,
-  },
-  productBrand: {
-    fontSize: 12,
     color: "gray",
   },
 });

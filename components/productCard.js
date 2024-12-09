@@ -1,35 +1,99 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 
-const ProductCard = ({ product }) => {
+const ProductCard = (props) => {
+  let cardStyle;
+
+  console.log(props);
+
+  switch (props.approval) {
+    case "High":
+      cardStyle = styles.cardHigh;
+      break;
+    case "Medium":
+      cardStyle = styles.cardMedium;
+      break;
+    case "Low":
+      cardStyle = styles.cardLow;
+      break;
+    default:
+      cardStyle = styles.card;
+      break;
+  }
+
   return (
-    <View style={styles.productCard}>
-      <Image source={{ uri: product.image }} style={styles.productImage} />
-      <Text style={styles.productName}>{product.name}</Text>
-      <Text style={styles.productBrand}>{product.brand}</Text>
-    </View>
+    <TouchableOpacity onPress={props.onPress}>
+      <View style={(styles.card, cardStyle)}>
+        <Image source={props.source} />
+        <View style={styles.Textcontainer}>
+          <Text style={styles.name}>{props.name}</Text>
+          <Text style={styles.brand}>{props.brand}</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  productCard: {
-    flex: 1,
+  cardHigh: {
+    backgroundColor: "#EA324C",
+    width: 116,
     alignItems: "center",
     padding: 10,
-    backgroundColor: "#F2F2F2",
-    borderRadius: 10,
+    borderRadius: 20,
+    margin: 5,
   },
-  productImage: {
+  cardMedium: {
+    backgroundColor: "#F2AC42",
+    width: 116,
+    alignItems: "center",
+    padding: 10,
+    borderRadius: 20,
+    margin: 5,
+  },
+  cardLow: {
+    backgroundColor: "#00B38A",
+    width: 116,
+    alignItems: "center",
+    padding: 10,
+    borderRadius: 20,
+    margin: 5,
+  },
+  cardDefault: {
+    backgroundColor: "#FFFFFF",
+    width: 116,
+    alignItems: "center",
+    padding: 10,
+    borderRadius: 20,
+    margin: 5,
+  },
+  card: {
+    width: 116,
+    alignItems: "center",
+    padding: 10,
+    borderRadius: 20,
+    margin: 5,
+  },
+  image: {
     width: 100,
     height: 100,
   },
-  productName: {
-    fontWeight: "bold",
-    marginTop: 5,
+  Textcontainer: {
+    borderRadius: 10,
+    width: 100,
+    margin: 6,
+    backgroundColor: "#FFFFFF",
   },
-  productBrand: {
+  name: {
+    fontWeight: "bold",
+    textAlign: "center",
+    marginTop: 6,
+  },
+  brand: {
     fontSize: 12,
     color: "gray",
+    textAlign: "center",
+    marginBottom: 6,
   },
 });
 
