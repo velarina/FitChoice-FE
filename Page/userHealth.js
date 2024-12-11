@@ -13,26 +13,23 @@ import {
 import IconButton from "../components/iconButton";
 
 const userHealth = ({ navigation }) => {
+  //   const [isChecked, setIsChecked] = useState(false);
+
+  //   const handleOnChange = () => {
+  //     setIsChecked(!isChecked);
+  //   };
+
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Adam Smith</Text>
+      </View>
       <ImageBackground
-        source={require("../assets/background3.png")}
+        source={require("../assets/background2.png")}
         style={styles.backgroundImage}
       >
-        <View style={styles.header}>
-          <IconButton
-            icon={require("../assets/arrow_back.png")}
-            onPress={() => navigation.navigate("home")}
-          />
-        </View>
-
         <ScrollView style={styles.contentContainer}>
-          <Text style={styles.ProductName}>Susu low fat</Text>
-          <Text style={styles.NutrientIngredient}>Ingredient</Text>
-          <View style={styles.ProductContainer}>
-            <Text style={styles.ProductText}>agr</Text>
-          </View>
-          <Text style={styles.NutrientIngredient}>Nutrient</Text>
+          <Text style={styles.ProductName}>Health Issue</Text>
           <View style={styles.ProductContainer}>
             <Text style={styles.ProductText}>agr</Text>
           </View>
@@ -45,20 +42,24 @@ const userHealth = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F0F0F0", // Add a background color for the container
+    backgroundColor: "#FFFFFF",
   },
   header: {
-    paddingTop: 24,
-    paddingBottom: 12,
+    paddingTop: 64,
+    paddingBottom: 24,
     paddingHorizontal: 24,
   },
+  headerText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    margin: 12,
+    textAlign: "center",
+  },
   backgroundImage: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: "100%",
-    width: "100%",
+    flex: 1,
+    resizeMode: "contain",
+    justifyContent: "center",
+    paddingTop: 20,
   },
   contentContainer: {
     flex: 1,

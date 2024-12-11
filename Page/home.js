@@ -10,9 +10,6 @@ import {
 } from "react-native";
 import SearchBar from "../components/searchBar";
 import ProductCard from "../components/productCard";
-// import TabController from "../components/tabController";
-import productDetail from "./productDetail";
-import { TabActions } from "@react-navigation/native";
 
 const HomePage = ({ navigation }) => {
   const initialProducts = [
@@ -90,7 +87,7 @@ const HomePage = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF", // Set a background color for the container
+    backgroundColor: "#FFFFFF",
   },
   header: {
     paddingTop: 64,
