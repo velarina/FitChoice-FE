@@ -13,6 +13,7 @@ import imageBG from "../assets/background.png";
 import CustomTextInput from "../components/customTextInput";
 import CustomTextInputDate from "../components/customTextInputDate";
 import CustomTextInputDropDown from "../components/customTextInputDropDown";
+import axiosInstance from "../libs/axios";
 
 const Register = ({ navigation }) => {
   const [username, setUsername] = useState("");
@@ -20,6 +21,22 @@ const Register = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [gender, setGender] = useState("");
+
+  const handleClick = async () => {
+    await axiosInstance
+      .post("member", {
+        memberName: username,
+        memberEmail: email,
+        password: password,
+        age: birthDate,
+        gender: gender,
+      })
+      .then((res) => {
+        console.log(res.data);
+        navigation.navigate("login");
+      })
+      .catch((error) => console.error(error));
+  };
 
   return (
     <View style={styles.container}>
@@ -65,10 +82,7 @@ const Register = ({ navigation }) => {
           />
         </View>
         <View style={{ paddingTop: 50 }}>
-          <CustomButtonG
-            onPress={() => navigation.navigate("login")}
-            text="Login"
-          />
+          <CustomButtonG onPress={handleClick} text="Login" />
         </View>
       </ImageBackground>
     </View>
