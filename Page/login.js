@@ -12,6 +12,7 @@ import React, { useState } from "react";
 import CustomButtonG from "../components/customButtonGreen";
 import imageBG from "../assets/background.png";
 import CustomTextInput from "../components/customTextInput";
+import axiosInstance from "../libs/axios";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -23,6 +24,19 @@ const Login = ({ navigation }) => {
 
   const handlePasswordChange = (newPassword) => {
     setPassword(newPassword);
+  };
+
+  const handleLogin = async () => {
+    await axiosInstance
+      .post("admin/login", {
+        adminEmail: email,
+        password: password,
+      })
+      .then((res) => {
+        console.log(res);
+        navigation.navigate("home");
+      })
+      .catch((error) => console.error(error.message));
   };
 
   return (
@@ -52,10 +66,7 @@ const Login = ({ navigation }) => {
           secureTextEntry={true}
         />
         <View style={{ paddingTop: 50 }}>
-          <CustomButtonG
-            onPress={() => navigation.navigate("home")}
-            text="login"
-          />
+          <CustomButtonG onPress={handleLogin} text="login" />
         </View>
       </ImageBackground>
     </View>
