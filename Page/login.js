@@ -28,8 +28,8 @@ const Login = ({ navigation }) => {
 
   const handleLogin = async () => {
     await axiosInstance
-      .post("admin/login", {
-        adminEmail: email,
+      .post("member/login", {
+        memberEmail: email,
         password: password,
       })
       .then((res) => {
