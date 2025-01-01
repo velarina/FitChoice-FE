@@ -13,6 +13,7 @@ import productDetail from "./Page/productDetail";
 import home from "./Page/home";
 import productRecomendation from "./Page/productRecommendation";
 import userHealth from "./Page/userHealth";
+import healthIssueDetail from "./Page/healthIssueDetail";
 import { ImageBackground } from "react-native";
 
 const Stack = createStackNavigator();
@@ -60,6 +61,11 @@ const App = () => {
         <Stack.Screen
           name="userHealth"
           component={TabNavigator}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="healthIssueDetail"
+          component={healthIssueDetail}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

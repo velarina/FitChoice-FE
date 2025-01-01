@@ -74,7 +74,7 @@ const HomePage = ({ navigation }) => {
                 onPress={() => navigation.navigate("productDetail")}
               />
             )}
-            keyExtractor={(item) => item.id.toString()} // Ensure the key is a string
+            keyExtractor={(item) => item.id.toString()}
             style={styles.productContainer}
             contentContainerStyle={{ paddingBottom: 80 }}
           />

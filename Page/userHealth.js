@@ -1,39 +1,70 @@
-import React from "react";
+import React, { useState } from "react";
 import {
-  Text,
   View,
-  Image,
-  StyleSheet,
-  StatusBar,
-  ImageBackground,
+  Text,
   FlatList,
-  ScrollView,
+  StyleSheet,
+  ImageBackground,
+  TouchableOpacity,
 } from "react-native";
 
-import IconButton from "../components/iconButton";
+const UserHealth = ({ navigation }) => {
+  const initialHealthIssues = [
+    { id: 1, name: "Diabetes", isChecked: false },
+    { id: 2, name: "Lactose Intolerant", isChecked: false },
+    { id: 3, name: "High Blood Pressure", isChecked: false },
+  ];
 
-const userHealth = ({ navigation }) => {
-  //   const [isChecked, setIsChecked] = useState(false);
+  const [healthIssues, setHealthIssues] = useState(initialHealthIssues);
 
-  //   const handleOnChange = () => {
-  //     setIsChecked(!isChecked);
-  //   };
+  const handleCheck = (id) => {
+    const updatedIssues = healthIssues.map((issue) =>
+      issue.id === id ? { ...issue, isChecked: !issue.isChecked } : issue
+    );
+    setHealthIssues(updatedIssues);
+  };
 
   return (
     <View style={styles.container}>
+      {/* Header Section */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>Adam Smith</Text>
+        <View style={styles.logOutButtonContainer}>
+          <TouchableOpacity
+            style={styles.logOutButton}
+            onPress={() => navigation.navigate("login")}
+          >
+            <Text style={styles.logOutText}>Log Out</Text>
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.headerText}>User Health</Text>
       </View>
       <ImageBackground
         source={require("../assets/background2.png")}
         style={styles.backgroundImage}
       >
-        <ScrollView style={styles.contentContainer}>
-          <Text style={styles.ProductName}>Health Issue</Text>
-          <View style={styles.ProductContainer}>
-            <Text style={styles.ProductText}>agr</Text>
-          </View>
-        </ScrollView>
+        <FlatList
+          data={healthIssues}
+          renderItem={({ item }) => (
+            <View style={styles.healthIssueContainer}>
+              <TouchableOpacity
+                style={styles.checkBox}
+                onPress={() => handleCheck(item.id)}
+              >
+                {item.isChecked && <Text style={styles.checkMark}>✔</Text>}
+              </TouchableOpacity>
+              <Text style={styles.healthIssueText}>{item.name}</Text>
+              <TouchableOpacity
+                style={styles.moreButton}
+                onPress={() => navigation.navigate("healthIssueDetail")}
+              >
+                <Text style={styles.moreButtonText}>more</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          keyExtractor={(item) => item.id.toString()}
+          style={styles.flatList}
+          contentContainerStyle={{ paddingBottom: 20 }}
+        />
       </ImageBackground>
     </View>
   );
@@ -48,49 +79,78 @@ const styles = StyleSheet.create({
     paddingTop: 64,
     paddingBottom: 24,
     paddingHorizontal: 24,
+    alignItems: "center",
+  },
+  logOutButtonContainer: {
+    position: "absolute",
+    top: 20,
+    right: 20,
+  },
+  logOutButton: {
+    backgroundColor: "#E8ECD7",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  logOutText: {
+    fontSize: 14,
+    color: "#000000",
+    fontWeight: "bold",
   },
   headerText: {
     fontSize: 24,
     fontWeight: "bold",
-    margin: 12,
-    textAlign: "center",
   },
   backgroundImage: {
     flex: 1,
     resizeMode: "contain",
-    justifyContent: "center",
     paddingTop: 20,
   },
-  contentContainer: {
-    flex: 1,
-    padding: 20,
+  flatList: {
+    paddingHorizontal: 20,
   },
-  ProductName: {
-    fontSize: 24,
-    margin: 6,
+  healthIssueContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "#F5F7EE",
+    padding: 16,
+    borderRadius: 12,
+    marginVertical: 8,
+  },
+  checkBox: {
+    width: 24,
+    height: 24,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: "#47663B",
+    backgroundColor: "#E8ECD7",
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 12,
+  },
+  checkMark: {
+    fontSize: 14,
+    color: "#47663B",
     fontWeight: "bold",
   },
-  ProductContainer: {
-    backgroundColor: "#F5F7EE",
-    padding: 24,
-    margin: 6,
-    borderRadius: 20,
-  },
-  NutrientIngredient: {
-    margin: 6,
+  healthIssueText: {
     fontSize: 16,
+    fontWeight: "bold",
+    flex: 1,
   },
-  ProductText: {
-    fontSize: 16,
+  moreButton: {
+    borderWidth: 1,
+    borderColor: "#47663B",
+    borderRadius: 16,
+    borderWidth: 2,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
   },
-  productImageContainer: {
-    alignItems: "center",
-    height: 200,
-  },
-  productImage: {
-    height: 180,
-    width: 180,
+  moreButtonText: {
+    color: "#47663B",
+    fontSize: 14,
   },
 });
 
-export default userHealth;
+export default UserHealth;

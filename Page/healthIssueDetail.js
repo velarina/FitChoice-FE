@@ -22,19 +22,21 @@ const healthIssueDetail = ({ navigation }) => {
         <View style={styles.header}>
           <IconButton
             icon={require("../assets/arrow_back.png")}
-            onPress={() => navigation.navigate("home")}
+            onPress={() => navigation.navigate("userHealth")}
           />
         </View>
 
         <ScrollView style={styles.contentContainer}>
-          <Text style={styles.ProductName}>Susu low fat</Text>
-          <Text style={styles.NutrientIngredient}>Ingredient</Text>
-          <View style={styles.ProductContainer}>
-            <Text style={styles.ProductText}>agr</Text>
+          <View style={styles.header1}>
+            <Text style={styles.healthIssueName}>Diabetes</Text>
           </View>
-          <Text style={styles.NutrientIngredient}>Nutrient</Text>
-          <View style={styles.ProductContainer}>
-            <Text style={styles.ProductText}>agr</Text>
+          <Text style={styles.desc}>Description</Text>
+          <View style={styles.healthIssueContainer}>
+            <Text style={styles.HealthIssueText}>agr</Text>
+          </View>
+          <Text style={styles.desc}>Prohibition</Text>
+          <View style={styles.healthIssueContainer}>
+            <Text style={styles.HealthIssueText}>agr</Text>
           </View>
         </ScrollView>
       </ImageBackground>
@@ -45,12 +47,17 @@ const healthIssueDetail = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F0F0F0", // Add a background color for the container
+    backgroundColor: "#F0F0F0",
   },
   header: {
     paddingTop: 24,
     paddingBottom: 12,
     paddingHorizontal: 24,
+  },
+  header1: {
+    paddingHorizontal: 50,
+    justifyContent: "center",
+    alignItems: "center",
   },
   backgroundImage: {
     position: "absolute",
@@ -64,22 +71,22 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
-  ProductName: {
+  healthIssueName: {
     fontSize: 24,
     margin: 6,
     fontWeight: "bold",
   },
-  ProductContainer: {
+  healthIssueContainer: {
     backgroundColor: "#F5F7EE",
     padding: 24,
     margin: 6,
     borderRadius: 20,
   },
-  NutrientIngredient: {
+  desc: {
     margin: 6,
     fontSize: 16,
   },
-  ProductText: {
+  HealthIssueText: {
     fontSize: 16,
   },
   productImageContainer: {
