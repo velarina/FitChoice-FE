@@ -1,5 +1,5 @@
 const config = {
-  NGROK_SERVER: "https://d2dd-110-136-171-30.ngrok-free.app",
+  NGROK_SERVER: "https://2788-36-65-254-125.ngrok-free.app/",
   OTHER_SERVER: "",
 };
 
