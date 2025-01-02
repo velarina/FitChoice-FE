@@ -5,6 +5,12 @@ const ProductCard = (props) => {
   let cardStyle;
   console.log(props);
   switch (props.approval) {
+    case "Waiting":
+      cardStyle = styles.cardDefault;
+      break;
+    case "Declined":
+      cardStyle = styles.cardDefault;
+      break;
     case "High":
       cardStyle = styles.cardHigh;
       break;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,12 +8,14 @@ import {
   TouchableOpacity,
 } from "react-native";
 
+import axiosInstance from "../libs/axios";
+
 const UserHealth = ({ navigation }) => {
   const [healthIssues, setHealthIssues] = useState([{}]);
 
   useEffect(() => {
     axiosInstance
-      .get("healthIssues")
+      .get("healthIssue")
       .then((res) => {
         setHealthIssues(res.data.healthIssues);
         console.log(healthIssues);
@@ -61,14 +63,16 @@ const UserHealth = ({ navigation }) => {
               <TouchableOpacity
                 style={styles.moreButton}
                 onPress={() =>
-                  navigation.navigate("healthIssueDetail", { id: item.id })
+                  navigation.navigate("healthIssueDetail", {
+                    id: item.healthIssueID,
+                  })
                 }
               >
                 <Text style={styles.moreButtonText}>more</Text>
               </TouchableOpacity>
             </View>
           )}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.id}
           style={styles.flatList}
           contentContainerStyle={{ paddingBottom: 20 }}
         />

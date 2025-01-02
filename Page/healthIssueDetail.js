@@ -1,13 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRoute } from "@react-navigation/native";
 import {
   Text,
   View,
-  Image,
   StyleSheet,
-  StatusBar,
   ImageBackground,
-  FlatList,
   ScrollView,
 } from "react-native";
 
@@ -17,18 +14,30 @@ import axiosInstance from "../libs/axios";
 const healthIssueDetail = ({ navigation }) => {
   const route = useRoute();
   const id = route.params?.id;
-  const [healthIssues, sethealthIssues] = useState();
+  const [healthIssues, setHealthIssues] = useState(null); // Initialized as null to check if data is loaded
+  const [loading, setLoading] = useState(true); // Track loading state
 
   useEffect(() => {
+    setLoading(true); // Set loading to true when the request starts
     axiosInstance
-      .get(`product/id/${id}`)
+      .get(`healthIssue/id/${id}`)
       .then((res) => {
-        sethealthIssues(res.data.healthIssues);
-        console.log(healthIssues);
-        console.log(res.data);
+        setHealthIssues(res.data.healthIssue);
+        setLoading(false); // Set loading to false after data is fetched
       })
-      .catch((error) => console.error(error.message));
-  }, []);
+      .catch((error) => {
+        console.error(error.message);
+        setLoading(false); // Set loading to false even on error
+      });
+  }, [id]); // Added id as dependency to reload on id change
+
+  if (loading) {
+    return <Text>Loading...</Text>; // Display loading text until data is fetched
+  }
+
+  if (!healthIssues) {
+    return <Text>No health issue data found</Text>; // Display message if no data is returned
+  }
 
   return (
     <View style={styles.container}>
@@ -45,15 +54,21 @@ const healthIssueDetail = ({ navigation }) => {
 
         <ScrollView style={styles.contentContainer}>
           <View style={styles.header1}>
-            <Text style={styles.healthIssueName}>Diabetes</Text>
+            <Text style={styles.healthIssueName}>
+              {healthIssues.healthIssueName}
+            </Text>
           </View>
           <Text style={styles.desc}>Description</Text>
           <View style={styles.healthIssueContainer}>
-            <Text style={styles.HealthIssueText}>agr</Text>
+            <Text style={styles.HealthIssueText}>
+              {healthIssues.healthIssueDesc}
+            </Text>
           </View>
           <Text style={styles.desc}>Prohibition</Text>
           <View style={styles.healthIssueContainer}>
-            <Text style={styles.HealthIssueText}>agr</Text>
+            <Text style={styles.HealthIssueText}>
+              {healthIssues.prohibition}
+            </Text>
           </View>
         </ScrollView>
       </ImageBackground>
