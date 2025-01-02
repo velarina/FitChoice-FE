@@ -1,4 +1,5 @@
 import React from "react";
+import { useRoute } from "@react-navigation/native";
 import {
   Text,
   View,
@@ -11,8 +12,24 @@ import {
 } from "react-native";
 
 import IconButton from "../components/iconButton";
+import axiosInstance from "../libs/axios";
 
 const healthIssueDetail = ({ navigation }) => {
+  const route = useRoute();
+  const id = route.params?.id;
+  const [healthIssues, sethealthIssues] = useState();
+
+  useEffect(() => {
+    axiosInstance
+      .get(`product/id/${id}`)
+      .then((res) => {
+        sethealthIssues(res.data.healthIssues);
+        console.log(healthIssues);
+        console.log(res.data);
+      })
+      .catch((error) => console.error(error.message));
+  }, []);
+
   return (
     <View style={styles.container}>
       <ImageBackground

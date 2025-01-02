@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,33 +10,21 @@ import {
 } from "react-native";
 import SearchBar from "../components/searchBar";
 import ProductCard from "../components/productCard";
+import axiosInstance from "../libs/axios";
 
 const HomePage = ({ navigation }) => {
-  const initialProducts = [
-    {
-      id: 1,
-      name: "Almond Milk",
-      approval: "Low",
-      brand: "NutriAlmond",
-      image: require("../assets/milk.png"),
-    },
-    {
-      id: 2,
-      name: "Citato",
-      approval: "Medium",
-      brand: "gofood",
-      image: require("../assets/chips.png"),
-    },
-    {
-      id: 3,
-      name: "soda",
-      approval: "High",
-      brand: "cocacola",
-      image: require("../assets/soda.png"),
-    },
-  ];
+  const [products, setProducts] = useState([{}]);
 
-  const [products, setProducts] = useState(initialProducts);
+  useEffect(() => {
+    axiosInstance
+      .get("product")
+      .then((res) => {
+        setProducts(res.data.products);
+        console.log(products);
+        console.log(res.data);
+      })
+      .catch((error) => console.error(error.message));
+  }, []);
 
   const handleSearch = (searchText) => {
     if (searchText.trim() === "") {
@@ -52,7 +40,7 @@ const HomePage = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Hello, Adam Smith!</Text>
+        <Text style={styles.headerText}>Hello, There!</Text>
         <SearchBar onSearch={handleSearch} />
       </View>
       <ImageBackground
@@ -67,14 +55,16 @@ const HomePage = ({ navigation }) => {
             numColumns={3}
             renderItem={({ item }) => (
               <ProductCard
-                source={item.image}
+                image_url={item.productsImage}
                 approval={item.approval}
-                name={item.name}
-                brand={item.brand}
-                onPress={() => navigation.navigate("productDetail")}
+                name={item.productsName}
+                brand={item.productsBrand}
+                onPress={() =>
+                  navigation.navigate("productDetail", { id: item.id })
+                }
               />
             )}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item.productsID}
             style={styles.productContainer}
             contentContainerStyle={{ paddingBottom: 80 }}
           />

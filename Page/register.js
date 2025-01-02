@@ -19,7 +19,7 @@ const Register = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [birthDate, setBirthDate] = useState("");
+  const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
 
   const handleClick = async () => {
@@ -28,7 +28,7 @@ const Register = ({ navigation }) => {
         memberName: username,
         memberEmail: email,
         password: password,
-        age: birthDate,
+        age: age,
         gender: gender,
       })
       .then((res) => {
@@ -68,11 +68,11 @@ const Register = ({ navigation }) => {
             text={password}
             onValueChange={setPassword}
             placeholder="Password"
-            secureTextEntry={true} // Hide password input
+            secureTextEntry={true}
           />
           <CustomTextInputDate
-            text={birthDate}
-            onValueChange={setBirthDate}
+            text={age}
+            onValueChange={setAge}
             placeholder="Birth Date"
           />
           <CustomTextInputDropDown

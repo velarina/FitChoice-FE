@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useRoute } from "@react-navigation/native";
 import {
   Text,
   View,
@@ -11,8 +12,24 @@ import {
 } from "react-native";
 
 import IconButton from "../components/iconButton";
+import axiosInstance from "../libs/axios";
 
 const productDetail = ({ navigation }) => {
+  const route = useRoute();
+  const id = route.params?.id;
+  const [products, setProducts] = useState();
+
+  useEffect(() => {
+    axiosInstance
+      .get(`product/id/${id}`)
+      .then((res) => {
+        setProducts(res.data.products);
+        console.log(products);
+        console.log(res.data);
+      })
+      .catch((error) => console.error(error.message));
+  }, []);
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -30,18 +47,20 @@ const productDetail = ({ navigation }) => {
           <View style={styles.productImageContainer}>
             <Image
               style={styles.productImage}
-              source={require("../assets/milk.png")}
+              source={{
+                uri: products.image_url,
+              }}
             />
           </View>
-          <Text style={styles.ProductName}>Susu low fat</Text>
-          <Text style={styles.ProductBrand}>Ultra Milk</Text>
+          <Text style={styles.ProductName}></Text>
+          <Text style={styles.ProductBrand}>{products.productsName}</Text>
           <Text style={styles.NutrientIngredient}>Ingredient</Text>
           <View style={styles.ProductContainer}>
-            <Text style={styles.ProductText}>agr</Text>
+            <Text style={styles.ProductText}>{products.ingredients}</Text>
           </View>
           <Text style={styles.NutrientIngredient}>Nutrient</Text>
           <View style={styles.ProductContainer}>
-            <Text style={styles.ProductText}>agr</Text>
+            <Text style={styles.ProductText}>{products.nutrients}</Text>
           </View>
         </ScrollView>
       </ImageBackground>

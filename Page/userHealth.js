@@ -9,13 +9,18 @@ import {
 } from "react-native";
 
 const UserHealth = ({ navigation }) => {
-  const initialHealthIssues = [
-    { id: 1, name: "Diabetes", isChecked: false },
-    { id: 2, name: "Lactose Intolerant", isChecked: false },
-    { id: 3, name: "High Blood Pressure", isChecked: false },
-  ];
+  const [healthIssues, setHealthIssues] = useState([{}]);
 
-  const [healthIssues, setHealthIssues] = useState(initialHealthIssues);
+  useEffect(() => {
+    axiosInstance
+      .get("healthIssues")
+      .then((res) => {
+        setHealthIssues(res.data.healthIssues);
+        console.log(healthIssues);
+        console.log(res.data);
+      })
+      .catch((error) => console.error(error.message));
+  }, []);
 
   const handleCheck = (id) => {
     const updatedIssues = healthIssues.map((issue) =>
@@ -48,14 +53,16 @@ const UserHealth = ({ navigation }) => {
             <View style={styles.healthIssueContainer}>
               <TouchableOpacity
                 style={styles.checkBox}
-                onPress={() => handleCheck(item.id)}
+                onPress={() => handleCheck(item.healthIssueID)}
               >
                 {item.isChecked && <Text style={styles.checkMark}>✔</Text>}
               </TouchableOpacity>
-              <Text style={styles.healthIssueText}>{item.name}</Text>
+              <Text style={styles.healthIssueText}>{item.healthIssueName}</Text>
               <TouchableOpacity
                 style={styles.moreButton}
-                onPress={() => navigation.navigate("healthIssueDetail")}
+                onPress={() =>
+                  navigation.navigate("healthIssueDetail", { id: item.id })
+                }
               >
                 <Text style={styles.moreButtonText}>more</Text>
               </TouchableOpacity>
