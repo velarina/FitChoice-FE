@@ -17,18 +17,22 @@ import axiosInstance from "../libs/axios";
 const productDetail = ({ navigation }) => {
   const route = useRoute();
   const id = route.params?.id;
-  const [products, setProducts] = useState();
+  const [products, setProducts] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     axiosInstance
       .get(`product/id/${id}`)
       .then((res) => {
-        setProducts(res.data.products);
-        console.log(products);
-        console.log(res.data);
+        setProducts(res.data.product);
+        setLoading(false);
       })
-      .catch((error) => console.error(error.message));
-  }, []);
+      .catch((error) => {
+        console.error(error.message);
+        setLoading(false);
+      });
+  }, [id]);
 
   return (
     <View style={styles.container}>
@@ -44,24 +48,34 @@ const productDetail = ({ navigation }) => {
         </View>
 
         <ScrollView style={styles.contentContainer}>
-          <View style={styles.productImageContainer}>
-            <Image
-              style={styles.productImage}
-              source={{
-                uri: products.image_url,
-              }}
-            />
-          </View>
-          <Text style={styles.ProductName}></Text>
-          <Text style={styles.ProductBrand}>{products.productsName}</Text>
-          <Text style={styles.NutrientIngredient}>Ingredient</Text>
-          <View style={styles.ProductContainer}>
-            <Text style={styles.ProductText}>{products.ingredients}</Text>
-          </View>
-          <Text style={styles.NutrientIngredient}>Nutrient</Text>
-          <View style={styles.ProductContainer}>
-            <Text style={styles.ProductText}>{products.nutrients}</Text>
-          </View>
+          {loading ? (
+            <Text>Loading...</Text>
+          ) : products ? (
+            <View style={styles.productContainer}>
+              {products.productsImage && (
+                <View style={styles.productImageContainer}>
+                  <Image
+                    style={styles.productImage}
+                    source={{
+                      uri: products.productsImage,
+                    }}
+                  />
+                </View>
+              )}
+              <Text style={styles.ProductName}>{products.productsName}</Text>
+              <Text style={styles.ProductBrand}>{products.productsBrand}</Text>
+              <Text style={styles.NutrientIngredient}>Ingredient</Text>
+              <View style={styles.ProductContainer}>
+                <Text style={styles.ProductText}>{products.ingredients}</Text>
+              </View>
+              <Text style={styles.NutrientIngredient}>Nutrient</Text>
+              <View style={styles.ProductContainer}>
+                <Text style={styles.ProductText}>{products.nutrients}</Text>
+              </View>
+            </View>
+          ) : (
+            <Text style={styles.noProductsText}>No products found</Text>
+          )}
         </ScrollView>
       </ImageBackground>
     </View>
@@ -71,7 +85,7 @@ const productDetail = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F0F0F0", // Add a background color for the container
+    backgroundColor: "#F0F0F0",
   },
   header: {
     paddingTop: 24,
@@ -120,6 +134,10 @@ const styles = StyleSheet.create({
   productImage: {
     height: 180,
     width: 180,
+  },
+  noProductsText: {
+    fontSize: 18,
+    color: "red",
   },
 });
 

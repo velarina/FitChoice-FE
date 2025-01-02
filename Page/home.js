@@ -31,7 +31,7 @@ const HomePage = ({ navigation }) => {
       setProducts(initialProducts); // Reset to initial products if search is empty
     } else {
       const filtered = initialProducts.filter((product) =>
-        product.name.toLowerCase().includes(searchText.toLowerCase())
+        product.name.toLowerCase().includes(searchText.toLowerCase()),
       );
       setProducts(filtered);
     }
@@ -60,7 +60,7 @@ const HomePage = ({ navigation }) => {
                 name={item.productsName}
                 brand={item.productsBrand}
                 onPress={() =>
-                  navigation.navigate("productDetail", { id: item.id })
+                  navigation.navigate("productDetail", { id: item.productsID })
                 }
               />
             )}
