@@ -10,10 +10,12 @@ import {
 } from "react-native";
 import SearchBar from "../components/searchBar";
 import ProductCard from "../components/productCard";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axiosInstance from "../libs/axios";
 
 const HomePage = ({ navigation }) => {
-  const [products, setProducts] = useState([{}]);
+  const [products, setProducts] = useState([]);
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
     axiosInstance
@@ -28,47 +30,55 @@ const HomePage = ({ navigation }) => {
 
   const handleSearch = (searchText) => {
     if (searchText.trim() === "") {
-      setProducts(initialProducts); // Reset to initial products if search is empty
+      setProducts(initialProducts);
     } else {
       const filtered = initialProducts.filter((product) =>
-        product.name.toLowerCase().includes(searchText.toLowerCase()),
+        product.name.toLowerCase().includes(searchText.toLowerCase())
       );
       setProducts(filtered);
     }
   };
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const savedUsername = await AsyncStorage.getItem("username");
+        console.log("Fetched username:", savedUsername);
+        setUsername(savedUsername || "Guest");
+      } catch (error) {
+        console.error("Failed to fetch username:", error.message);
+        setUsername("Guest");
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Hello, There!</Text>
-        <SearchBar onSearch={handleSearch} />
+        <Text style={styles.headerText}>Hello, {username}!</Text>
+        <SearchBar onSearch={() => {}} />
       </View>
       <ImageBackground
         source={require("../assets/background2.png")}
         style={styles.backgroundImage}
       >
-        {products.length === 0 ? (
-          <Text style={styles.noProductsText}>No products found</Text>
-        ) : (
-          <FlatList
-            data={products}
-            numColumns={3}
-            renderItem={({ item }) => (
-              <ProductCard
-                image_url={item.productsImage}
-                approval={item.approval}
-                name={item.productsName}
-                brand={item.productsBrand}
-                onPress={() =>
-                  navigation.navigate("productDetail", { id: item.productsID })
-                }
-              />
-            )}
-            keyExtractor={(item) => item.productsID}
-            style={styles.productContainer}
-            contentContainerStyle={{ paddingBottom: 80 }}
-          />
-        )}
+        <FlatList
+          data={products}
+          numColumns={3}
+          renderItem={({ item }) => (
+            <ProductCard
+              image_url={item.productsImage}
+              name={item.productsName}
+              brand={item.productsBrand}
+              approval={item.approval}
+              onPress={() =>
+                navigation.navigate("productDetail", { id: item.productsID })
+              }
+            />
+          )}
+          keyExtractor={(item) => item.productsID.toString()}
+        />
       </ImageBackground>
     </View>
   );

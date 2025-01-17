@@ -4,7 +4,7 @@ import {
   StyleSheet,
   StatusBar,
   ImageBackground,
-  TextInput,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 
@@ -22,20 +22,56 @@ const Register = ({ navigation }) => {
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
 
+  const validateInputs = () => {
+    // Check for empty fields
+    if (!username || !email || !password || !age || !gender) {
+      Alert.alert("Validation Error", "All fields are required.");
+      return false;
+    }
+
+    // Validate email format
+    if (!email.includes("@")) {
+      Alert.alert("Validation Error", "Please enter a valid email address.");
+      return false;
+    }
+
+    // Validate username (no numbers allowed)
+    if (/\d/.test(username)) {
+      Alert.alert(
+        "Validation Error",
+        "Username should not contain any numbers."
+      );
+      return false;
+    }
+
+    // Validate age (must be a number)
+    if (isNaN(age) || Number(age) <= 0) {
+      Alert.alert("Validation Error", "Age must be a positive number.");
+      return false;
+    }
+
+    return true;
+  };
+
   const handleClick = async () => {
-    await axiosInstance
-      .post("member", {
+    if (!validateInputs()) {
+      return;
+    }
+
+    try {
+      const response = await axiosInstance.post("member", {
         memberName: username,
         memberEmail: email,
         password: password,
-        age: age,
+        age: Number(age), // Ensure age is sent as a number
         gender: gender,
-      })
-      .then((res) => {
-        console.log(res.data);
-        navigation.navigate("login");
-      })
-      .catch((error) => console.error(error));
+      });
+      console.log(response.data);
+      navigation.navigate("login");
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", "An error occurred during registration.");
+    }
   };
 
   return (
@@ -73,7 +109,7 @@ const Register = ({ navigation }) => {
           <CustomTextInputDate
             text={age}
             onValueChange={setAge}
-            placeholder="Birth Date"
+            placeholder="Age"
           />
           <CustomTextInputDropDown
             value={gender}
@@ -82,7 +118,7 @@ const Register = ({ navigation }) => {
           />
         </View>
         <View style={{ paddingTop: 50 }}>
-          <CustomButtonG onPress={handleClick} text="Login" />
+          <CustomButtonG onPress={handleClick} text="Register" />
         </View>
       </ImageBackground>
     </View>

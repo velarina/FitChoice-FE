@@ -1,4 +1,6 @@
 import react from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Alert } from "react-native";
 import {
   Text,
   View,
@@ -17,7 +19,6 @@ import axiosInstance from "../libs/axios";
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const handleEmailChange = (newEmail) => {
     setEmail(newEmail);
   };
@@ -25,18 +26,35 @@ const Login = ({ navigation }) => {
   const handlePasswordChange = (newPassword) => {
     setPassword(newPassword);
   };
-
   const handleLogin = async () => {
-    await axiosInstance
-      .post("member/login", {
+    try {
+      const res = await axiosInstance.post("member/login", {
         memberEmail: email,
         password: password,
-      })
-      .then((res) => {
-        console.log(res);
-        navigation.navigate("home");
-      })
-      .catch((error) => console.error(error.message));
+      });
+
+      console.log("API Response:", res);
+
+      if (res.data && res.data.message === "Berhasil login!") {
+        // Assuming memberID and username are now part of the response
+        const { memberID, memberName } = res.data;
+
+        if (memberID && memberName) {
+          console.log("Saving to AsyncStorage:", memberID, memberName);
+          await AsyncStorage.setItem("memberID", memberID.toString());
+          await AsyncStorage.setItem("username", memberName);
+
+          navigation.navigate("home");
+        } else {
+          Alert.alert("Login failed", "User data missing in response.");
+        }
+      } else {
+        Alert.alert("Login failed", "Invalid response from server.");
+      }
+    } catch (error) {
+      console.error("Login failed:", error.response?.data || error.message);
+      Alert.alert("Login failed", "An error occurred while logging in.");
+    }
   };
 
   return (

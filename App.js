@@ -72,7 +72,8 @@ const App = () => {
     </NavigationContainer>
   );
 
-  function TabNavigator() {
+  function TabNavigator({ route }) {
+    const { memberID } = route.params || {};
     return (
       <Tab.Navigator
         screenOptions={{

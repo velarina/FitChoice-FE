@@ -9,31 +9,61 @@ import {
 } from "react-native";
 
 import axiosInstance from "../libs/axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const UserHealth = ({ navigation }) => {
-  const [healthIssues, setHealthIssues] = useState([{}]);
+  const [healthIssues, setHealthIssues] = useState([]);
+  const [username, setUsername] = useState("");
+  const [memberID, setMemberID] = useState("");
 
   useEffect(() => {
+    const fetchUserData = async () => {
+      const id = await AsyncStorage.getItem("memberID");
+      const name = await AsyncStorage.getItem("username");
+
+      setMemberID(id);
+      setUsername(name || "Guest");
+    };
+
+    fetchUserData();
+
     axiosInstance
       .get("healthIssue")
       .then((res) => {
-        setHealthIssues(res.data.healthIssues);
-        console.log(healthIssues);
-        console.log(res.data);
+        setHealthIssues(
+          res.data.healthIssues.map((issue) => ({ ...issue, isChecked: false }))
+        );
       })
-      .catch((error) => console.error(error.message));
+      .catch((error) =>
+        console.error("Failed to fetch health issues:", error.message)
+      );
   }, []);
 
-  const handleCheck = (id) => {
-    const updatedIssues = healthIssues.map((issue) =>
-      issue.id === id ? { ...issue, isChecked: !issue.isChecked } : issue
-    );
-    setHealthIssues(updatedIssues);
+  const handleCheck = async (healthIssueID) => {
+    try {
+      const updatedIssues = healthIssues.map((issue) =>
+        issue.healthIssueID === healthIssueID
+          ? { ...issue, isChecked: !issue.isChecked }
+          : issue
+      );
+      setHealthIssues(updatedIssues);
+
+      const isChecked = !updatedIssues.find(
+        (i) => i.healthIssueID === healthIssueID
+      ).isChecked;
+
+      await axiosInstance.post("healthissue/assign", {
+        memberID,
+        healthIssueID,
+        isChecked,
+      });
+    } catch (error) {
+      console.error("Failed to update health issue:", error.message);
+    }
   };
 
   return (
     <View style={styles.container}>
-      {/* Header Section */}
       <View style={styles.header}>
         <View style={styles.logOutButtonContainer}>
           <TouchableOpacity
@@ -44,6 +74,7 @@ const UserHealth = ({ navigation }) => {
           </TouchableOpacity>
         </View>
         <Text style={styles.headerText}>User Health</Text>
+        <Text style={styles.headerText}>{username}</Text>
       </View>
       <ImageBackground
         source={require("../assets/background2.png")}
@@ -72,7 +103,7 @@ const UserHealth = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           )}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.healthIssueID.toString()}
           style={styles.flatList}
           contentContainerStyle={{ paddingBottom: 20 }}
         />
